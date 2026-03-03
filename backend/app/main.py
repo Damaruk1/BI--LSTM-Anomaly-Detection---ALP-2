@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
-from app.database import db
-from app.inference import predict_sequence
+from backend.app.database import db
+from backend.app.inference import predict_sequence
 
 app = FastAPI()
 
