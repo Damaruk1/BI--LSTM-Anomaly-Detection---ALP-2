@@ -4,7 +4,7 @@ import joblib
 import os
 import json
 
-from app.model_architecture import BiLSTMAutoencoder
+from backend.app.model_architecture import BiLSTMAutoencoder
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_DIR = os.path.join(BASE_DIR, "..", "model")
