@@ -2,6 +2,8 @@ import { useState } from "react"
 import axios from "axios"
 import { motion } from "framer-motion"
 
+const API = import.meta.env.VITE_API_BASE
+
 function Analyze() {
   const [employeeId, setEmployeeId] = useState("")
   const [logData, setLogData] = useState("")
@@ -11,7 +13,7 @@ function Analyze() {
     try {
       const parsedSequence = JSON.parse(logData)
 
-      const res = await axios.post("http://127.0.0.1:8000/analyze", {
+      const res = await axios.post(`${API}/analyze`, {
         employee_id: employeeId,
         sequence: parsedSequence
       })

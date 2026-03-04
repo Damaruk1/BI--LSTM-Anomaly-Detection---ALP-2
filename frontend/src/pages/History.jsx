@@ -2,14 +2,21 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { motion } from "framer-motion"
 
+const API = import.meta.env.VITE_API_BASE
+
 function History() {
   const [data, setData] = useState([])
 
   useEffect(() => {
     async function fetchHistory() {
-      const res = await axios.get("http://127.0.0.1:8000/history")
-      setData(res.data)
+      try {
+        const res = await axios.get(`${API}/history`)
+        setData(res.data)
+      } catch (err) {
+        console.log("Backend not reachable", err)
+      }
     }
+
     fetchHistory()
   }, [])
 

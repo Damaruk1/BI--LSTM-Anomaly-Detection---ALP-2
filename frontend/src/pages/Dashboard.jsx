@@ -2,21 +2,37 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { motion } from "framer-motion"
 
+const API = import.meta.env.VITE_API_BASE
+
 function Dashboard() {
   const [employeeCount, setEmployeeCount] = useState(0)
+  const [anomalyCount, setAnomalyCount] = useState(0)
 
   useEffect(() => {
-    async function fetchEmployees() {
+    async function fetchData() {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/employees")
-        setEmployeeCount(res.data.length)
+        const empRes = await axios.get(`${API}/employees`)
+        setEmployeeCount(empRes.data.length)
+
+        const historyRes = await axios.get(`${API}/history`)
+
+        const count = historyRes.data.reduce((total, employee) => {
+          return total + employee.logs.filter(
+            log => log.prediction === "Anomaly"
+          ).length
+        }, 0)
+
+        setAnomalyCount(count)
+
       } catch (err) {
-        console.log("Backend not reachable")
+        console.log("Backend not reachable", err)
       }
     }
 
-    fetchEmployees()
+    fetchData()
   }, [])
+
+  const systemSecure = anomalyCount === 0
 
   return (
     <div>
@@ -24,10 +40,7 @@ function Dashboard() {
         Security Overview
       </h1>
 
-      <div style={{
-        display: "flex",
-        gap: "40px"
-      }}>
+      <div style={{ display: "flex", gap: "40px" }}>
 
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -54,7 +67,7 @@ function Dashboard() {
           }}
         >
           <h2>Anomalies Detected</h2>
-          <h1>--</h1>
+          <h1 style={{ fontSize: "48px" }}>{anomalyCount}</h1>
         </motion.div>
 
         <motion.div
@@ -68,7 +81,9 @@ function Dashboard() {
           }}
         >
           <h2>System Status</h2>
-          <h1 style={{ color: "#00ff88" }}>SECURE</h1>
+          <h1 style={{ color: systemSecure ? "#00ff88" : "#ff4444" }}>
+            {systemSecure ? "SECURE" : "ALERT"}
+          </h1>
         </motion.div>
 
       </div>

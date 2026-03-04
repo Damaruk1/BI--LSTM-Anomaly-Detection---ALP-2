@@ -2,16 +2,18 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import axios from "axios"
 
+const API = import.meta.env.VITE_API_BASE
+
 function Employees() {
   const [employees, setEmployees] = useState([])
 
   useEffect(() => {
     async function fetchEmployees() {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/employees")
+        const res = await axios.get(`${API}/employees`)
         setEmployees(res.data)
       } catch (err) {
-        console.log("Backend not reachable")
+        console.log("Backend not reachable", err)
       }
     }
 
